@@ -95,6 +95,7 @@ if start_cooking:
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
             paper_layout("", res_glm, StampManager.get_stamp(ni_glm))
+            st.code(StampManager.get_stamp(ni_glm)) 
             
 
     with col2:
@@ -107,6 +108,7 @@ if start_cooking:
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
             paper_layout("", res_glm, StampManager.get_stamp(ni_ds))
+            st.code(StampManager.get_stamp(ni_ds)) 
             
 
     with col3:
@@ -119,6 +121,7 @@ if start_cooking:
             # 重点：在这里调用盘子（排版）
              # 把获取到的印章字符串直接传进去
             paper_layout("", res_glm, StampManager.get_stamp(ni_gem))
+            st.code(StampManager.get_stamp(ni_gem)) 
             
             # 这一行如果 NI 爆表，汤姆猫就会在后台“咣”地一声降临！
     
