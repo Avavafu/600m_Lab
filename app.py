@@ -89,6 +89,7 @@ if start_cooking:
         with st.status("正在进行学术黑话降维...", expanded=True):
             chef_glm = ChefAgent(provider="zhipu")
             res_glm = chef_glm.cook(keyword, user_style, raw_material)
+            st.session_state['res_glm'] = res_glm # 必须存进 session_state！
             ni_glm = StampManager.calculate_ni(res_glm, "zhipu")
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
@@ -101,6 +102,7 @@ if start_cooking:
         with st.status("正在注入赛博熵增代码...", expanded=True):
             chef_ds = ChefAgent(provider="deepseek")
             res_ds = chef_ds.cook(keyword, user_style, raw_material)
+            st.session_state['res_ds'] = res_ds # 必须存进 session_state！
             ni_ds = StampManager.calculate_ni(res_ds, "deepseek")            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
@@ -112,6 +114,7 @@ if start_cooking:
         with st.status("正在撕裂现实维度...", expanded=True):
             chef_gem = ChefAgent(provider="gemini")
             res_gem = chef_gem.cook(keyword, user_style, raw_material)
+            st.session_state['res_gem'] = res_gem # 必须存进 session_state！
             ni_gem = StampManager.calculate_ni(res_gem, "gemini")
             # 重点：在这里调用盘子（排版）
              # 把获取到的印章字符串直接传进去
