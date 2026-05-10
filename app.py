@@ -2,6 +2,19 @@ import streamlit as st
 from chef_agent import ChefAgent, StampManager
 import base64
 
+# --- 输出格式排版 放在 app.py 顶部作为工具函数 ---
+def paper_layout(title, content):
+    st.markdown(f"""
+    <div style="text-align: center; font-family: 'serif';">
+        <h3 style="color: #333;">{title}</h3>
+        <p style="font-size: 0.8em; color: #666;">600m Lab Experimental Report</p>
+        <hr>
+    </div>
+    <div style="text-align: justify; font-size: 0.9em; line-height: 1.5; background: #f9f9f9; padding: 15px; border-radius: 5px;">
+        {content}
+    </div>
+    """, unsafe_allow_html=True)
+
 def trigger_audio(file_path):
     """
     这是一个魔法函数：它能把本地的 MP3 转换成网页能听懂的流，并强行播放
@@ -37,13 +50,27 @@ st.markdown("--- 在现实之上六百米处，烹饪学术的荒谬 ---")
 with st.sidebar:
     st.header("🍴 厨房配置")
     keyword = st.text_input("输入今日的学术大变关键词", value="神经网络")
+
+    # 插入我们的新调料
+    user_style = st.selectbox(
+        "选择大变口味：",
+        ["经典学术原味", "古典哲学", "后现代主义", "火星文"]
+    )
+    
     # 增加一个开关：是自己输入，还是让 Scavenger 去抓？
     mode = st.radio("原材料来源", ["让 Scavenger 去外采", "首席执行官亲供"])
     start_cooking = st.button("🔥 开始大变烹饪")
+    
+
+    
 
 if start_cooking:
     col1, col2, col3 = st.columns(3)
     
+    if not keyword:
+        st.error("🚨 首席执行官，还没输入关键词呢，大厨没法开火！")
+        st.stop()
+
     # --- 阶段 1：Scavenger 采料 ---
     with st.spinner("🕵️ Scavenger 正在高维废墟中搜寻素材..."):
         if mode == "让 Scavenger 去外采":
@@ -60,31 +87,49 @@ if start_cooking:
         st.subheader("🤖 智谱大厨 (GLM)")
         with st.status("正在进行学术黑话降维...", expanded=True):
             chef_glm = ChefAgent(provider="zhipu")
-            res_glm = chef_glm.cook("严谨老学究风", "元认知论文报告", raw_material)
+            res_glm = chef_glm.cook(keyword, user_style, raw_material)
             ni_glm = StampManager.calculate_ni(res_glm, "zhipu")
-            # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！
-            st.code(StampManager.get_stamp(ni_glm)) 
-            st.write(res_glm)
+            # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
+            # 重点：在这里调用盘子（排版）
+            paper_layout(f"关于{keyword}的元认知考察", res_glm)
+            st.code(StampManager.get_stamp(ni_glm))
+            
 
     with col2:
-        st.subheader("🧪 DeepSeek 大厨")
+        st.subheader("🐋 DeepSeek大厨")
         with st.status("正在注入赛博熵增代码...", expanded=True):
             chef_ds = ChefAgent(provider="deepseek")
-            res_ds = chef_ds.cook("硬核赛博风", "底层逻辑审计", raw_material)
-            ni_ds = StampManager.calculate_ni(res_ds, "deepseek")
+            res_ds = chef_ds.cook(keyword, user_style, raw_material)
+            ni_ds = StampManager.calculate_ni(res_ds, "deepseek")            
+            # 重点：在这里调用盘子（排版）
+            paper_layout(f"关于{keyword}的元认知考察", res_ds)
             st.code(StampManager.get_stamp(ni_ds))
-            st.write(res_ds)
+            
 
     with col3:
         st.subheader("🌌 Gemini 维度主厨")
         with st.status("正在撕裂现实维度...", expanded=True):
             chef_gem = ChefAgent(provider="gemini")
-            res_gem = chef_gem.cook("高维混乱克苏鲁风", "维度低语", raw_material)
+            res_gem = chef_gem.cook(keyword, user_style, raw_material)
             ni_gem = StampManager.calculate_ni(res_gem, "gemini")
+            # 重点：在这里调用盘子（排版）
+            paper_layout(f"关于{keyword}的元认知考察", res_gem)
             st.code(StampManager.get_stamp(ni_gem))
-            st.write(res_gem)
+            
             # 这一行如果 NI 爆表，汤姆猫就会在后台“咣”地一声降临！
     
+
+    # 在 app.py 的侧边栏或者页面底部增加这个部分
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("🤖 Agent 身份登记")
+
+    if st.sidebar.button("询问智谱大厨的注册信息"):
+        with st.sidebar.status("正在联络大厨..."):
+            reg_info = chef_glm.ask_for_registration()
+            st.sidebar.success("大厨扔来了一张纸条！")
+            st.sidebar.code(reg_info, language="text")
+
+
     # 检查是否有大厨的作品 NI 爆表了
     if ni_gem > 90:
         st.error("🚨 检测到维度坍缩！正在启动紧急避险协议...")
@@ -97,14 +142,18 @@ if start_cooking:
         st.markdown("""
             <style>
             .stApp {
-                background-color: #ff4b4b;
-                /* 把 infinite 改成 15，让它闪 1.5 秒就消停 */
+                /* 初始背景设为白色 */
+                background-color: white; 
+                /* 运行 15 次，总计 1.5 秒 */
                 animation: blinker 0.1s linear 15;
-                /* 动画结束后，背景色恢复正常（或保持淡红色） */
+                /* 确保停在动画 100% 的状态 */
                 animation-fill-mode: forwards;
             }
+
             @keyframes blinker {
-                50% { opacity: 0; }
+                0% { background-color: white; }
+                50% { background-color: #ff4b4b; }
+                100% { background-color: white; } /* 强制终点回到白色 */
             }
             </style>
             """, unsafe_allow_html=True)

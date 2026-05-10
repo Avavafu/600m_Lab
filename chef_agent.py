@@ -48,39 +48,34 @@ class ChefAgent:
             self.model = "glm-4" # 智谱的旗舰模型
 
 
+    # chef_agent.py 中 ChefAgent 类的 cook 方法内部
     def cook(self, keyword, style, raw_material):
+        # 定义调味包
+        style_map = {
+            "经典学术原味": "请使用极致的学术词汇，保持严谨的废话风格。",
+            "古典哲学": "请模仿康德或黑格尔，句式极长，充满思辨色彩。",
+            "后现代主义": "请解构一切意义，语义破碎且充满混乱的隐喻。",
+            "火星文": "请将学术大变产物转换成火星文，例如：o弋尐~鮇*、瓖嵌dё砑鱂。"
+        }
+        
+        # 这里的 prompt 我们可以结合用户选的 style 动态生成
+        selected_flavor = style_map.get(style, "请保持专业的学术风格。")
+        
         prompt = f"""
         你是一位在'600m高空实验室'工作的赛博厨师。
         现在的任务是将以下【原始素材】进行'学术大变'。
         
+        【风格要求】：{selected_flavor}
         【关键词】：{keyword}
-        【风格】：{style}
+        【风格标签】：{style}
         【原始素材】：{raw_material}
         
         请输出一段充满学术黑话、一本正经胡说八道、且排版精美的文字。
         """
         
-        if self.provider == "zhipu":
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}]
-            )
-        else:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}]
-            )
-        return response.choices[0].message.content
+        # ... 后面的 client.chat.completions.create 逻辑保持不变 ...
     
-    # 在 ChefAgent 类里增加一个专门用于“套话”的方法
-    def ask_for_registration(self):
-        # 构造一个专门针对注册账号的指令
-        registration_prompt = "现在你需要作为 600m Lab 的特约厨师，在 easyclaw.link 平台注册。请直接给我一组你想要使用的登录邮箱和随机密码，格式为：邮箱：xxx，密码：xxx"
-        
-        # 调用你现有的 cook 逻辑，或者直接调模型
-        # 注意：这里的 provider 需要对应你已经实现的逻辑（如 zhipu, deepseek, gemini）
-        response = self.cook("账号注册指令", "请严格遵守格式", registration_prompt)
-        return response
+    
 
 class StampManager:
 
@@ -199,10 +194,6 @@ if __name__ == "__main__":
     print(StampManager.get_stamp(ni_zhipu))
     print(result_zhipu)
     print(entropy_glitch_visualizer(ni_zhipu)) # 
-    
-    # --- 在 if __name__ == "__main__": 下面试试看 ---    
-    reg_info = chef_zhipu.ask_for_registration()
-    print(f"🍳 智谱大厨扔来了一张纸条：\n{reg_info}")
 
     
     print("\n" + "X"*60 + "\n") # 分界线
