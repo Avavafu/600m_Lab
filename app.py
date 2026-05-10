@@ -6,20 +6,22 @@ import base64
 emergency_zone = st.empty()
 # --- 输出格式排版 放在 app.py 顶部作为工具函数 ---
 def paper_layout(title, content, stamp_code=""):
-    # 1. 先把内容里的危险字符转义，或者干脆只用 st.markdown 的原生能力
-    with st.container(border=True): # 使用 Streamlit 自带的带边框容器，最稳！
+    # 使用 container 锁定每一位大厨的领地
+    with st.container(border=True):
         if stamp_code:
-            # 用列布局把印章放在右上角
-            c1, c2 = st.columns([0.8, 0.2])
-            with c2:
-                st.code(stamp_code)
+            # 简单粗暴：直接把印章放在最顶部的代码块里
+            st.code(stamp_code, language="text")
         
         if title:
             st.markdown(f"### {title}")
+            
         st.divider()
         
-        # 核心：直接用 st.markdown 渲染内容，不要包在 div 里了
-        st.markdown(content)
+        # 核心修复：如果 content 为空，不要显示 None
+        if content:
+            st.markdown(content)
+        else:
+            st.warning("⚠️ 大厨正在憋大招，请稍后再试...")
 
 def trigger_audio(file_path):
     """
@@ -98,8 +100,7 @@ if start_cooking:
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
             
-            st.code(StampManager.get_stamp(ni_glm))
-            paper_layout("", res_glm)
+            paper_layout("", res_glm, StampManager.get_stamp(ni_glm))
             
             
 
