@@ -71,6 +71,7 @@ class ChefAgent:
         【原始素材】：{raw_material}
         
         请输出一段充满学术黑话、一本正经胡说八道、且排版精美的文字。
+        请务必根据【风格】的要求进行创作，如果是火星文，请彻底转化字形！
         """
         
         # ... 后面的 client.chat.completions.create 逻辑保持不变 ...

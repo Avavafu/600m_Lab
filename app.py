@@ -2,16 +2,18 @@ import streamlit as st
 from chef_agent import ChefAgent, StampManager
 import base64
 
+# 挖一个空位，平时它什么都不显示
+emergency_zone = st.empty()
 # --- 输出格式排版 放在 app.py 顶部作为工具函数 ---
-def paper_layout(title, content):
+def paper_layout(title, content, stamp_code=""):
     st.markdown(f"""
-    <div style="text-align: center; font-family: 'serif';">
-        <h3 style="color: #333;">{title}</h3>
-        <p style="font-size: 0.8em; color: #666;">600m Lab Experimental Report</p>
+    <div style="position: relative; border: 1px solid #ddd; padding: 20px;">
+        <div style="position: absolute; top: 10px; right: 10px; font-family: monospace; color: red; opacity: 0.8;">
+            {stamp_code}
+        </div>
+        <h3 style="text-align: center;">{title}</h3>
         <hr>
-    </div>
-    <div style="text-align: justify; font-size: 0.9em; line-height: 1.5; background: #f9f9f9; padding: 15px; border-radius: 5px;">
-        {content}
+        <div style="text-align: justify;">{content}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -61,7 +63,16 @@ with st.sidebar:
     mode = st.radio("原材料来源", ["让 Scavenger 去外采", "首席执行官亲供"])
     start_cooking = st.button("🔥 开始大变烹饪")
     
+# 在 app.py 的侧边栏或者页面底部增加这个部分
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("🤖 Agent 身份登记")
 
+    if st.sidebar.button("询问智谱大厨的注册信息"):
+        with st.sidebar.status("正在联络大厨..."):
+            chef_glm = ChefAgent(provider="zhipu")
+            reg_info = chef_glm.ask_for_registration()
+            st.sidebar.success("大厨扔来了一张纸条！")
+            st.sidebar.code(reg_info, language="text")
     
 
 if start_cooking:
@@ -91,8 +102,8 @@ if start_cooking:
             ni_glm = StampManager.calculate_ni(res_glm, "zhipu")
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
-            paper_layout(f"关于{keyword}的元认知考察", res_glm)
-            st.code(StampManager.get_stamp(ni_glm))
+            # 把获取到的印章字符串直接传进去
+            paper_layout("", res_glm, StampManager.get_stamp(ni_glm))
             
 
     with col2:
@@ -102,8 +113,8 @@ if start_cooking:
             res_ds = chef_ds.cook(keyword, user_style, raw_material)
             ni_ds = StampManager.calculate_ni(res_ds, "deepseek")            
             # 重点：在这里调用盘子（排版）
-            paper_layout(f"关于{keyword}的元认知考察", res_ds)
-            st.code(StampManager.get_stamp(ni_ds))
+            # 把获取到的印章字符串直接传进去
+            paper_layout("", res_glm, StampManager.get_stamp(ni_ds))
             
 
     with col3:
@@ -113,31 +124,32 @@ if start_cooking:
             res_gem = chef_gem.cook(keyword, user_style, raw_material)
             ni_gem = StampManager.calculate_ni(res_gem, "gemini")
             # 重点：在这里调用盘子（排版）
-            paper_layout(f"关于{keyword}的元认知考察", res_gem)
-            st.code(StampManager.get_stamp(ni_gem))
+             # 把获取到的印章字符串直接传进去
+            paper_layout("", res_glm, StampManager.get_stamp(ni_gem))
             
             # 这一行如果 NI 爆表，汤姆猫就会在后台“咣”地一声降临！
     
 
-    # 在 app.py 的侧边栏或者页面底部增加这个部分
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("🤖 Agent 身份登记")
-
-    if st.sidebar.button("询问智谱大厨的注册信息"):
-        with st.sidebar.status("正在联络大厨..."):
-            reg_info = chef_glm.ask_for_registration()
-            st.sidebar.success("大厨扔来了一张纸条！")
-            st.sidebar.code(reg_info, language="text")
-
 
     # 检查是否有大厨的作品 NI 爆表了
     if ni_gem > 90:
-        st.error("🚨 检测到维度坍缩！正在启动紧急避险协议...")
-        # 汤姆猫，出笼！
+        # 动态往刚才那个空位里塞进警告框
+        emergency_zone.error("🚨 检测到维度坍缩！正在启动紧急避险协议...")
+        
+        # 汤姆猫音效依然触发
         trigger_audio("tom_scream.mp3")
-        # 顺便来一点视觉震撼：让屏幕闪红（简单的办法是不断弹 error）
+        
+        # 视觉震撼：连续弹出 toast
         for _ in range(3):
             st.toast("维度防御已离线！", icon="⚠️")
+
+        # --- 关键：在这里加一个强制等待，给用户一点震撼时间 ---
+        import time
+        time.sleep(2) # 让警报持续 2 秒
+        
+        # 4. 恢复正常！
+        emergency_zone.empty() 
+        # 此时红光动画也应该播放完了（你设置的是 1.5秒），背景会自动回白
 
         st.markdown("""
             <style>
