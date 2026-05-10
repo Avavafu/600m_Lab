@@ -62,17 +62,7 @@ with st.sidebar:
     # 增加一个开关：是自己输入，还是让 Scavenger 去抓？
     mode = st.radio("原材料来源", ["让 Scavenger 去外采", "首席执行官亲供"])
     start_cooking = st.button("🔥 开始大变烹饪")
-    
-# 在 app.py 的侧边栏或者页面底部增加这个部分
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("🤖 Agent 身份登记")
 
-    if st.sidebar.button("询问智谱大厨的注册信息"):
-        with st.sidebar.status("正在联络大厨..."):
-            chef_glm = ChefAgent(provider="zhipu")
-            reg_info = chef_glm.ask_for_registration()
-            st.sidebar.success("大厨扔来了一张纸条！")
-            st.sidebar.code(reg_info, language="text")
     
 
 if start_cooking:
