@@ -5,15 +5,15 @@ import base64
 # 挖一个空位，平时它什么都不显示
 emergency_zone = st.empty()
 # --- 输出格式排版 放在 app.py 顶部作为工具函数 ---
-def paper_layout(title, content, stamp_code=""):
+def paper_layout(title, content):
     st.markdown(f"""
-    <div style="position: relative; border: 1px solid #ddd; padding: 20px;">
-        <div style="position: absolute; top: 10px; right: 10px; font-family: monospace; color: red; opacity: 0.8;">
-            {stamp_code}
-        </div>
-        <h3 style="text-align: center;">{title}</h3>
+    <div style="text-align: center; font-family: 'serif';">
+        <h3 style="color: #333;">{title}</h3>
+        <p style="font-size: 0.8em; color: #666;">600m Lab Experimental Report</p>
         <hr>
-        <div style="text-align: justify;">{content}</div>
+    </div>
+    <div style="text-align: justify; font-size: 0.9em; line-height: 1.5; background: #f9f9f9; padding: 15px; border-radius: 5px;">
+        {content}
     </div>
     """, unsafe_allow_html=True)
 
@@ -93,7 +93,10 @@ if start_cooking:
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_glm))
+            
+            st.code(StampManager.get_stamp(ni_glm))
+            paper_layout("", res_glm)
+            
             
 
     with col2:
@@ -104,7 +107,8 @@ if start_cooking:
             ni_ds = StampManager.calculate_ni(res_ds, "deepseek")            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_ds))
+            st.code(StampManager.get_stamp(ni_ds))
+            paper_layout("", res_ds)
             
 
     with col3:
@@ -115,7 +119,8 @@ if start_cooking:
             ni_gem = StampManager.calculate_ni(res_gem, "gemini")
             # 重点：在这里调用盘子（排版）
              # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_gem))
+            st.code(StampManager.get_stamp(ni_gem))
+            paper_layout("", res_gem)
             
             # 这一行如果 NI 爆表，汤姆猫就会在后台“咣”地一声降临！
     
