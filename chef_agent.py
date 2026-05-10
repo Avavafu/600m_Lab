@@ -167,6 +167,14 @@ class StampManager:
 
     @staticmethod
     def calculate_ni(text, provider):
+
+        # --- 新加这一行保护逻辑 ---
+        if text is None:
+            return 10 # 如果没内容，给个保底的低分
+        # -----------------------
+        
+        base_ni = len(text) % 100 # 现在的报错行
+    
         """
         计算胡说八道指数 (NI)
         这里的逻辑我们可以玩点梗：Gemini 自动 +30，学术风自动 -20
