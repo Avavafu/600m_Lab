@@ -47,6 +47,7 @@ class ChefAgent:
             self.client = ZhipuAI(api_key=st.secrets["ZHIPU_API_KEY"])
             self.model = "glm-4" # 智谱的旗舰模型
 
+
     def cook(self, keyword, style, raw_material):
         prompt = f"""
         你是一位在'600m高空实验室'工作的赛博厨师。
@@ -70,6 +71,16 @@ class ChefAgent:
                 messages=[{"role": "user", "content": prompt}]
             )
         return response.choices[0].message.content
+    
+    # 在 ChefAgent 类里增加一个专门用于“套话”的方法
+    def ask_for_registration(self):
+        # 构造一个专门针对注册账号的指令
+        registration_prompt = "现在你需要作为 600m Lab 的特约厨师，在 easyclaw.link 平台注册。请直接给我一组你想要使用的登录邮箱和随机密码，格式为：邮箱：xxx，密码：xxx"
+        
+        # 调用你现有的 cook 逻辑，或者直接调模型
+        # 注意：这里的 provider 需要对应你已经实现的逻辑（如 zhipu, deepseek, gemini）
+        response = self.cook("账号注册指令", "请严格遵守格式", registration_prompt)
+        return response
 
 class StampManager:
 
@@ -187,7 +198,11 @@ if __name__ == "__main__":
     print(f"\n👨‍🍳 [ 智谱大厨 (GLM)评估报告 ] NI 指数: {ni_zhipu}%")
     print(StampManager.get_stamp(ni_zhipu))
     print(result_zhipu)
-    print(entropy_glitch_visualizer(ni_zhipu)) # 接上刚才那个坏图注
+    print(entropy_glitch_visualizer(ni_zhipu)) # 
+    
+    # --- 在 if __name__ == "__main__": 下面试试看 ---    
+    reg_info = chef_zhipu.ask_for_registration()
+    print(f"🍳 智谱大厨扔来了一张纸条：\n{reg_info}")
 
     
     print("\n" + "X"*60 + "\n") # 分界线

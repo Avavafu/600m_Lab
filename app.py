@@ -29,17 +29,17 @@ except ImportError:
 # 1. 实验室视觉基调
 st.set_page_config(page_title="600m Lab: Cyber-Gourmet", page_icon="🍳", layout="wide")
 
-st.title("🍳 600m 实验室：Cyber-Gourmet Edition")
+st.title("🧪 600m 实验室：Cyber-Gourmet Edition")
 st.markdown("--- 在现实之上六百米处，烹饪学术的荒谬 ---")
 
 # ... 页面配置 ...
 
 with st.sidebar:
     st.header("🍴 厨房配置")
-    keyword = st.text_input("搜索关键词", value="神经网络")
+    keyword = st.text_input("输入今日的学术大变关键词", value="神经网络")
     # 增加一个开关：是自己输入，还是让 Scavenger 去抓？
     mode = st.radio("原材料来源", ["让 Scavenger 去外采", "首席执行官亲供"])
-    start_cooking = st.button("🔥 开始大变！")
+    start_cooking = st.button("🔥 开始大变烹饪")
 
 if start_cooking:
     col1, col2, col3 = st.columns(3)
