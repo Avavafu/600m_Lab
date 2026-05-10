@@ -6,17 +6,20 @@ import base64
 emergency_zone = st.empty()
 # --- 输出格式排版 放在 app.py 顶部作为工具函数 ---
 def paper_layout(title, content, stamp_code=""):
-    
-    st.markdown(f"""
-    <div style="position: relative; border: 1px solid #ddd; padding: 20px;">
-        <div style="position: absolute; top: 10px; right: 10px; font-family: monospace; color: red; opacity: 0.8;">
-            {stamp_code}
-        </div>
-        <h3 style="text-align: center;">{title}</h3>
-        <hr>
-        <div style="text-align: justify;">{content}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # 1. 先把内容里的危险字符转义，或者干脆只用 st.markdown 的原生能力
+    with st.container(border=True): # 使用 Streamlit 自带的带边框容器，最稳！
+        if stamp_code:
+            # 用列布局把印章放在右上角
+            c1, c2 = st.columns([0.8, 0.2])
+            with c2:
+                st.code(stamp_code)
+        
+        if title:
+            st.markdown(f"### {title}")
+        st.divider()
+        
+        # 核心：直接用 st.markdown 渲染内容，不要包在 div 里了
+        st.markdown(content)
 
 def trigger_audio(file_path):
     """
