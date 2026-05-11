@@ -94,7 +94,7 @@ if start_cooking:
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_glm))
+            paper_layout("", res_glm)
             st.code(StampManager.get_stamp(ni_glm)) 
             
 
@@ -107,7 +107,7 @@ if start_cooking:
             ni_ds = StampManager.calculate_ni(res_ds, "deepseek")            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_ds))
+            paper_layout("", res_ds)
             st.code(StampManager.get_stamp(ni_ds)) 
             
 
@@ -120,7 +120,7 @@ if start_cooking:
             ni_gem = StampManager.calculate_ni(res_gem, "gemini")
             # 重点：在这里调用盘子（排版）
              # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm, StampManager.get_stamp(ni_gem))
+            paper_layout("", res_gem)
             st.code(StampManager.get_stamp(ni_gem)) 
             
             # 这一行如果 NI 爆表，汤姆猫就会在后台“咣”地一声降临！
