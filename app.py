@@ -88,19 +88,15 @@ if start_cooking:
         st.subheader("🤖 智谱大厨 (GLM)")
         with st.status("正在进行学术黑话降维...", expanded=True):
             chef_glm = ChefAgent(provider="zhipu")
-            st.write(f"调试：关键词是 {keyword}")
-            st.write(f"调试：原材料长度 {len(raw_material) if raw_material else '0'}")
             res_glm = chef_glm.cook(keyword, user_style, raw_material)
             #st.session_state['res_glm'] = res_glm # 必须存进 session_state！
             ni_glm = StampManager.calculate_ni(res_glm, "zhipu")
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
-            # 把获取到的印章字符串直接传进去
-            
+            # 把获取到的印章字符串直接传进去            
             paper_layout("", res_glm)
             st.code(StampManager.get_stamp(ni_glm)) 
-            st.write("尝试联络 DeepSeek 大厨...")
-            st.write(res_glm)
+            
             
 
     with col2:
@@ -176,4 +172,4 @@ if start_cooking:
 
             
 
-    #st.balloons() # 庆祝三厨合体成功
+    
