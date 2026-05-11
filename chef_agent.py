@@ -74,18 +74,35 @@ class ChefAgent:
         请输出一段充满学术黑话、一本正经胡说八道、且排版精美的文字。
         请务必根据【风格】的要求进行创作，如果是火星文，请彻底转化字形！
         """
+        # 1. 放在这里检测 Secrets 环境（记得要在 Streamlit 环境下运行）
+        st.sidebar.write("---")
+        st.sidebar.write("🧪 云端环境探测器：")
+        st.sidebar.write(f"已识别 Keys: {[k for k in st.secrets.keys()]}")
 
-        if self.provider == "zhipu":
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}]
-            )
-        else:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}]
-            )
-        return response.choices[0].message.content
+        try:
+            # 2. 统一在这里调用 API
+            if self.provider == "zhipu":
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+            else:
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+            
+            # 3. 关键：检查 response 是否真的有内容
+            if response and response.choices:
+                return response.choices[0].message.content
+            else:
+                st.error("⚠️ 大厨反馈了一个空结果，请检查 API 额度或状态。")
+                return "【实验室事故：大厨端出了空盘子】"
+
+        except Exception as e:
+            # 4. 如果云端报错，这行字会直接跳在你的网页上！
+            st.error(f"🚨 云端大厨急眼了，报错如下：{e}")
+            return f"【报错：{e}】"
         
     
     
