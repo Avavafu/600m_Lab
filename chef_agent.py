@@ -48,6 +48,7 @@ class ChefAgent:
             self.model = "glm-4" # 智谱的旗舰模型
 
 
+
     # chef_agent.py 中 ChefAgent 类的 cook 方法内部
     def cook(self, keyword, style, raw_material):
         # 定义调味包
@@ -73,8 +74,18 @@ class ChefAgent:
         请输出一段充满学术黑话、一本正经胡说八道、且排版精美的文字。
         请务必根据【风格】的要求进行创作，如果是火星文，请彻底转化字形！
         """
-        
-        # ... 后面的 client.chat.completions.create 逻辑保持不变 ...
+
+        if self.provider == "zhipu":
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}]
+            )
+        else:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}]
+            )
+        return response.choices[0].message.content
     
     
 
@@ -196,7 +207,7 @@ if __name__ == "__main__":
     
     # --- 第一位：智谱大厨 (GLM) ---
     chef_zhipu = ChefAgent(provider="zhipu")
-    result_zhipu = chef_zhipu.cook("神经网络", "严谨老学究风", raw_data)
+    result_zhipu = chef_zhipu.cook("神经网络", "火星文", raw_data)
     print("--- 👨‍🍳 智谱大厨 (GLM) 的作品 ---")
     ni_zhipu = StampManager.calculate_ni(result_zhipu, "zhipu")
     print(f"\n👨‍🍳 [ 智谱大厨 (GLM)评估报告 ] NI 指数: {ni_zhipu}%")
@@ -210,7 +221,7 @@ if __name__ == "__main__":
     # --- 第三位：维度主厨 (Gemini) ---
     # 既然我在你的 2026 年环境里，我们可以调用 Gemini 的 API
     chef_gemini = ChefAgent(provider="gemini") # 记得在你的适配器里处理这个 provider
-    result_gemini = chef_gemini.cook("神经网络", "高维混乱克苏鲁风", raw_data)
+    result_gemini = chef_gemini.cook("神经网络", "火星文", raw_data)
     print("--- 🌌 维度主厨 (Gemini) 的作品 ---")
     # 示例：维度主厨 (Gemini) 的输出
     ni_gemini = StampManager.calculate_ni(result_gemini, "gemini")
@@ -223,7 +234,7 @@ if __name__ == "__main__":
 
     # --- 第二位：DeepSeek大厨 ---
     chef_ds = ChefAgent(provider="deepseek")
-    result_ds = chef_ds.cook("神经网络", "硬核赛博科幻风", raw_data)
+    result_ds = chef_ds.cook("神经网络", "火星文", raw_data)
     print("--- 🦾 DeepSeek 大厨 的作品 ---")
     ni_ds = StampManager.calculate_ni(result_ds, "deepseek")
     print(f"\n🦾 [ DeepSeek 大厨评估报告 ] NI 指数: {ni_ds}%")
