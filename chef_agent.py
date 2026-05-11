@@ -76,8 +76,8 @@ class ChefAgent:
         """
         # 1. 放在这里检测 Secrets 环境（记得要在 Streamlit 环境下运行）
         st.sidebar.write("---")
-        st.sidebar.write("🧪 云端环境探测器：")
-        st.sidebar.write(f"已识别 Keys: {[k for k in st.secrets.keys()]}")
+        #st.sidebar.write("🧪 云端环境探测器：")
+        #st.sidebar.write(f"已识别 Keys: {[k for k in st.secrets.keys()]}")
 
         try:
             # 2. 统一在这里调用 API
