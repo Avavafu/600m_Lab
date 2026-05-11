@@ -94,7 +94,8 @@ if start_cooking:
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout("", res_glm)
+            paper_layout(f"关于{keyword}的元认知考察", res_glm)
+            #paper_layout("", res_glm)
             st.code(StampManager.get_stamp(ni_glm)) 
             
 
