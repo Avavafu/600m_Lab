@@ -75,7 +75,7 @@ class ChefAgent:
         请务必根据【风格】的要求进行创作，如果是火星文，请彻底转化字形！
         """
         # 1. 放在这里检测 Secrets 环境（记得要在 Streamlit 环境下运行）
-        st.sidebar.write("---")
+        #st.sidebar.write("---")
         #st.sidebar.write("🧪 云端环境探测器：")
         #st.sidebar.write(f"已识别 Keys: {[k for k in st.secrets.keys()]}")
 
