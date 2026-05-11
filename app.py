@@ -89,13 +89,13 @@ if start_cooking:
         with st.status("正在进行学术黑话降维...", expanded=True):
             chef_glm = ChefAgent(provider="zhipu")
             res_glm = chef_glm.cook(keyword, user_style, raw_material)
-            #st.session_state['res_glm'] = res_glm # 必须存进 session_state！
+            st.session_state['res_glm'] = res_glm # 必须存进 session_state！
             ni_glm = StampManager.calculate_ni(res_glm, "zhipu")
             # 这里的每一行 print 其实都会触发你代码里的 play_mockery TTS！            
             # 重点：在这里调用盘子（排版）
             # 把获取到的印章字符串直接传进去
-            paper_layout(f"关于{keyword}的元认知考察", res_glm)
-            #paper_layout("", res_glm)
+            
+            paper_layout("", res_glm)
             st.code(StampManager.get_stamp(ni_glm)) 
             
 
