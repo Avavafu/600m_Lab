@@ -91,6 +91,41 @@ def inject_theme():
         .paper-meta { margin-bottom: 1rem; color: var(--muted); font-size: .76rem; letter-spacing: .08em; text-align: center; }
         [data-testid="stVerticalBlockBorderWrapper"] { background: rgba(255,255,255,.74); border-color: rgba(42,72,110,.15); }
         code { border-radius: .65rem !important; }
+
+        /* Streamlit swaps its widget tokens in a dark browser theme, while this
+           particular lab deliberately stays a bright control room. Re-anchor
+           sidebar controls so they do not turn into white text on mint walls. */
+        @media (prefers-color-scheme: dark) {
+            [data-testid="stSidebar"] {
+                background: linear-gradient(180deg, #edf1f8, #e5f3ef) !important;
+                color: var(--ink) !important;
+            }
+            [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+            [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+            [data-testid="stSidebar"] [data-testid="stCaptionContainer"],
+            [data-testid="stSidebar"] [data-baseweb="radio"] label,
+            [data-testid="stSidebar"] [data-baseweb="radio"] label * {
+                color: #34445f !important;
+            }
+            [data-testid="stSidebar"] input,
+            [data-testid="stSidebar"] textarea,
+            [data-testid="stSidebar"] [data-baseweb="select"] > div {
+                background: rgba(255,255,255,.94) !important;
+                color: #192944 !important;
+                -webkit-text-fill-color: #192944;
+                border-color: rgba(42,72,110,.35) !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="select"] *,
+            [data-testid="stSidebar"] [data-baseweb="select"] svg {
+                color: #192944 !important;
+                fill: #192944 !important;
+            }
+            [data-testid="stSidebar"] input::placeholder,
+            [data-testid="stSidebar"] textarea::placeholder {
+                color: #71809a !important;
+                -webkit-text-fill-color: #71809a;
+            }
+        }
         </style>
         """,
         unsafe_allow_html=True,
