@@ -99,6 +99,7 @@ def inject_theme():
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, #edf1f8, #e5f3ef) !important;
                 color: var(--ink) !important;
+                color-scheme: light;
             }
             [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
             [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
@@ -107,18 +108,55 @@ def inject_theme():
             [data-testid="stSidebar"] [data-baseweb="radio"] label * {
                 color: #34445f !important;
             }
-            [data-testid="stSidebar"] input,
-            [data-testid="stSidebar"] textarea,
+            [data-testid="stSidebar"] .stTextInput [data-baseweb="input"],
+            [data-testid="stSidebar"] .stTextArea [data-baseweb="textarea"],
             [data-testid="stSidebar"] [data-baseweb="select"] > div {
                 background: rgba(255,255,255,.94) !important;
                 color: #192944 !important;
+                border: 1px solid rgba(42,72,110,.08) !important;
+                border-radius: .75rem !important;
+                box-shadow: none !important;
+                outline: none !important;
+                overflow: hidden;
+            }
+            [data-testid="stSidebar"] .stTextInput [data-baseweb="input"]:focus-within,
+            [data-testid="stSidebar"] .stTextArea [data-baseweb="textarea"]:focus-within,
+            [data-testid="stSidebar"] [data-baseweb="select"] > div:focus-within {
+                border-color: rgba(114,88,216,.42) !important;
+                box-shadow: 0 0 0 3px rgba(114,88,216,.10) !important;
+            }
+            [data-testid="stSidebar"] input,
+            [data-testid="stSidebar"] textarea {
+                background: transparent !important;
+                color: #192944 !important;
                 -webkit-text-fill-color: #192944;
-                border-color: rgba(42,72,110,.35) !important;
+                border: 0 !important;
+                box-shadow: none !important;
+                outline: none !important;
+            }
+            [data-testid="stSidebar"] .stTextInput [data-baseweb="base-input"],
+            [data-testid="stSidebar"] .stTextArea [data-baseweb="base-input"] {
+                background: transparent !important;
+                color: #192944 !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="select"] > div > div {
+                background: transparent !important;
+                border: 0 !important;
             }
             [data-testid="stSidebar"] [data-baseweb="select"] *,
             [data-testid="stSidebar"] [data-baseweb="select"] svg {
                 color: #192944 !important;
                 fill: #192944 !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="radio"] > div:first-child {
+                color-scheme: light;
+            }
+            [data-testid="stSidebar"] [data-baseweb="radio"]:has(input:not(:checked)) > div:first-child {
+                background: rgba(255,255,255,.94) !important;
+                border: 1px solid rgba(42,72,110,.24) !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="radio"]:has(input:not(:checked)) > div:first-child > div {
+                background: transparent !important;
             }
             [data-testid="stSidebar"] input::placeholder,
             [data-testid="stSidebar"] textarea::placeholder {
